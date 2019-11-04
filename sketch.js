@@ -25,13 +25,35 @@ var geoLocations = [
     checkingGeoFence: false
   },
   {
-    loc: 'Pawtucket Lofts',
+    loc: 'RISD Design Center',
     locID: 'C',
-    lat: 41.8791167,
-    long: -71.3899453,
+    lat: 41.826439,
+    long: -71.408733,
+    fenceRadius: .1,
+    checkingGeoFence: false
+  },
+  {
+    loc: 'RISD Nature Lab',
+    locID: 'D',
+    lat: 41.827022,
+    long: -71.407982,
+    fenceRadius: .05,
+    checkingGeoFence: false
+  },
+  {
+    loc: 'RISD Design Center',
+    locID: 'E',
+    lat: 41.825383,
+    long: -71.409463,
     fenceRadius: .05,
     checkingGeoFence: false
   }
+  // loc: 'Pawtucket Lofts',
+  // locID: 'C',
+  // lat: 41.8791167,
+  // long: -71.3899453,
+  // fenceRadius: .05,
+  // checkingGeoFence: false
 ];
 
 // Location data of the user
@@ -62,6 +84,21 @@ function draw() {
 function insideGeoLocation(position, site) {
   console.log(`Current User Position: ${locationData.latitude}, ${locationData.longitude}`);
   console.log(`User is inside of geo location: ${site.loc}, ${site.lat}, ${site.long}`);
+  if (site.locID == 'A') {
+    $(".designFiction").show(800);
+  }
+  if (site.locID == 'B') {
+    $(".illustrations").show(800);
+  }
+  if (site.locID == 'C') {
+    $(".maize").show(800);
+  }
+  if (site.locID == 'D') {
+    $(".renders").show(800);
+  }
+  if (site.locID == 'E') {
+    $(".bts").show(800);
+  }
 }
 
 function outsideGeoLocation(position, site) {
@@ -69,6 +106,22 @@ function outsideGeoLocation(position, site) {
   console.log(`User is outside of geo location: ${site.loc}, ${site.lat}, ${site.long}`);
   distance = calcGeoDistance(locationData.latitude, locationData.longitude, site.lat, site.long, 'mi');
   print("Distance: " + distance + "mi");
+
+  if (site.locID == 'A') {
+    $(".designFiction").hide(800);
+  }
+  if (site.locID == 'B') {
+    $(".illustrations").hide(800);
+  }
+  if (site.locID == 'C') {
+    $(".maize").hide(800);
+  }
+  if (site.locID == 'D') {
+    $(".renders").hide(800);
+  }
+  if (site.locID == 'E') {
+    $(".bts").hide(800);
+  }
 }
 
 function positionChanged(position) {
@@ -102,15 +155,23 @@ function updateLocationData(position) {
 
 function keyTyped() {
   if (key === 'a') {
-    checkID = !checkID;
-    // print to console ID geo fence is activation status
-    print(checkID ? "ID Fence Activated" : "ID Fence Deactivated");
-    print(`checking ID: ${checkID}`);
-  } else if (key === "s") {
-    checkCIT = !checkCIT;
-    // print to console CIT geo fence activation status
-    print(checkCIT ? "CIT Fence Activated" : "CIT Fence Deactivated");
-    print(`checking CIT: ${checkCIT}`);
+    // checkID = !checkID;
+    // // print to console ID geo fence is activation status
+    // print(checkID ? "ID Fence Activated" : "ID Fence Deactivated");
+    // print(`checking ID: ${checkID}`);
+    $(".designFiction").toggle(800);
+  } else if (key === "b") {
+    // checkCIT = !checkCIT;
+    // // print to console CIT geo fence activation status
+    // print(checkCIT ? "CIT Fence Activated" : "CIT Fence Deactivated");
+    // print(`checking CIT: ${checkCIT}`);
+    $(".illustrations").toggle(800);
+  } else if (key === "c") {
+    $(".maize").toggle(800);
+  } else if (key === "d") {
+    $(".renders").toggle(800);
+  } else if (key === "e") {
+    $(".bts").toggle(800);
   }
 }
 
