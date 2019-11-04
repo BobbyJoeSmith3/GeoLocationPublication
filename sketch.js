@@ -7,6 +7,36 @@ var idb = [41.8231969, -71.4064552];
 // CIT Building Latitude and Longitude
 var cit = [41.8224994, -71.4118984];
 
+var geoLocations = [
+  {
+    loc: 'RISD ID Building',
+    locID: 'A',
+    lat: 41.8231969,
+    long: -71.4064552,
+    fenceRadius: .05,
+    checkingGeoFence: false
+  },
+  {
+    loc: 'RISD CIT Building',
+    locID: 'B',
+    lat: 41.8224994,
+    long: -71.4118984,
+    fenceRadius: .05,
+    checkingGeoFence: false
+  },
+  {
+    loc: 'Pawtucket Lofts',
+    locID: 'C',
+    lat: 41.8791167,
+    long: -71.3899453,
+    fenceRadius: .05,
+    checkingGeoFence: false
+  }
+];
+
+// Location data of the user
+var locationData;
+
 // Which geo locations are being checked
 var checkID = false;
 var checkCIT = false;
@@ -18,7 +48,7 @@ function setup() {
   checkForGeoLocLib();
 
   // Get location data of current position (once)
-  // getCurrentPosition(doThisOnLocation);
+  getCurrentPosition(initLoc);
 
   // Get location data everytime user makes a significant change of position
   // watchOptions = {
@@ -26,23 +56,45 @@ function setup() {
   // };
   // watchPosition(positionChanged, watchOptions);
 
-  // Enable higher accuracy of location readings.
-  fenceOptions = {
-    enableHighAccuracy: true
-  };
-  
-  // geoFenceCircle(latitude, longitude, fenceDistance, insideCallback, outsideCallback, units, options)
-  // Create a geofence at the ID building and check if user is inside of it
-  idFence = new geoFenceCircle(idb[0], idb[1], 0.003, insideID, outsideID, 'mi', fenceOptions);
-  // Create a geofence at the CIT building and check if user is inside of it
-  citFence = new geoFenceCircle(cit[0], cit[1], 0.003, insideCIT, outsideCIT, 'mi', fenceOptions);
+  // // Enable higher accuracy of location readings.
+  // fenceOptions = {
+  //   enableHighAccuracy: true
+  // };
+  //
+  // for (let site in geoLocations) {
+  //   // add to global scope
+  //   // window[`fence${site.locID}`] = new geoFenceCircle(site.lat, site.long, site.fenceRadius, insideFence, outsideFence, 'mi', fenceOptions);
+  //   let siteObj = geoLocations[site];
+  //   let currentSite = window[`fence${site.locID}`];
+  //   currentSite = new geoFenceCircle(site.lat, site.long, site.fenceRadius);
+  //   if (currentSite.insideFence) {
+  //     console.log("inside of fence!");
+  //   } else {
+  //     console.log(locationData.latitude);
+  //   }
+  //
+  // }
+
+
 }
 
 function draw() {
   // background(220);
 }
 
+function insideGeoLocation(position, site) {
+  console.log(`Current User Position: ${locationData.latitude}, ${locationData.longitude}`);
+  console.log(`User is inside of geo location: ${site.loc}, ${site.lat}, ${site.long}`);
+}
 
+function outsideGeoLocation(position, obj) {
+  console.log(position);
+  console.log(obj);
+  // console.log(`Current User Position: ${locationData.latitude}, ${locationData.longitude}`);
+  // console.log(`User is outside of geo location: ${site.loc}, ${site.lat}, ${site.long}`);
+  // distance = calcGeoDistance(locationData.latitude, locationData.longitude, site.lat, site.long, 'mi');
+  // print("Distance: " + distance + "mi");
+}
 
 function positionChanged(position) {
   print("POSITION CHANGED DATA");
@@ -53,16 +105,39 @@ function positionChanged(position) {
   print("long: " + position.longitude);
 }
 
-function doThisOnLocation(position) {
-  print("CURRENT POSITION DATA");
+function initLoc(position) {
+  locationData = position;
+  // Enable higher accuracy of location readings.
+  fenceOptions = {
+    enableHighAccuracy: true
+  };
+
+  // Initialize Geo Locations
+  for (let site in geoLocations) {
+    // add to global scope
+    // window[`fence${site.locID}`] = new geoFenceCircle(site.lat, site.long, site.fenceRadius, insideFence, outsideFence, 'mi', fenceOptions);
+    let siteObj = geoLocations[site];
+    // let currentSite = window[`fence${site.locID}`];
+    // console.log(currentSite);
+    // let currentSite = new geoFenceCircle(site.lat, site.long, site.fenceRadius);
+    let currentSite = new geoFenceCircle(siteObj.lat, siteObj.long, siteObj.fenceRadius, insideGeoLocation, outsideGeoLocation,'mi', siteObj, fenceOptions);
+    console.log(currentSite);
+    // if (currentSite.insideFence) {
+    //   insideGeoLocation(siteObj);
+    // } else {
+    //   outsideGeoLocation(siteObj);
+    // }
+
+  }
+
+
+  // print("CURRENT POSITION DATA");
   // Update Latitude and Longitude
-  currentLat = position.latitude;
-  currentLong = position.longitude;
-
-  print("lat: " + position.latitude);
-  print("long: " + position.longitude);
-  print("acc: " + position.accuracy);
-
+  // currentLat = position.latitude;
+  // currentLong = position.longitude;
+  // print("lat: " + position.latitude);
+  // print("long: " + position.longitude);
+  // print("acc: " + position.accuracy);
   // print("alt: " + position.altitude);
   // print("acc-alt: " + position.altitudeAccuracy);
   // print("heading: " + position.heading);
@@ -143,11 +218,11 @@ function keyTyped() {
   if (key === 'a') {
     checkID = !checkID;
     // print to console ID geo fence is activation status
-    print(checkID ? "ID Fence Activated" : "ID Fence Deactivated"); 
+    print(checkID ? "ID Fence Activated" : "ID Fence Deactivated");
     print(`checking ID: ${checkID}`);
   } else if (key === "s") {
     checkCIT = !checkCIT;
-    // print to console CIT geo fence activation status 
+    // print to console CIT geo fence activation status
     print(checkCIT ? "CIT Fence Activated" : "CIT Fence Deactivated");
     print(`checking CIT: ${checkCIT}`);
   }
