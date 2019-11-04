@@ -21,7 +21,9 @@ p {
 }
 
 img {
-  width: 24rem;
+  /* width: 24rem; */
+  width: 100%;
+  max-width: 24rem;
   margin-bottom: 1rem;
 }
 .bts, .illustrations, .renders, .maize {
@@ -37,4 +39,10 @@ img {
 }
 canvas {
   display: block;
+}
+
+@media screen and (max-width: 480px) {
+  img {
+    width: 100%;
+  }
 }
